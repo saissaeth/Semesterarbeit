@@ -46,7 +46,7 @@ mse <- function(train, test, model) {
 
 #Find missclassification rate
 missclassification_rate <- function(train, test,model) {
-  rf <- randomForest(y ~ glue(model), data = train, ntree = 100)
+  rf <- randomForest(y ~ ., data = train[, c("y",  unlist(strsplit(model, "\\+")))], ntree = 100)
   y_hat <- predict(rf, test)
   return(sum(y_hat != test$y)/length(test$y)) #return missclassification rate
 }
@@ -67,29 +67,47 @@ combinations_3 <- combn(c("X1", "X2", "X3", "X4"), 3, simplify = FALSE) %>%
   unlist()
 
 # Create a table of combinations of c("X1","X2","X3","X4") of size 2
-combinations_2 <- combn(c("X1","X2","X3","X4"), 2) %>%
-  as_tibble() %>%
-  t() %>%
-  apply(X = ., 1, function(x) glue_collapse(x, "+"))
+combinations_3 <- combn(c("X1", "X2", "X3", "X4"), 2, simplify = FALSE) %>%
+  map(~ glue_collapse(.x, "+")) %>%
+  unlist()
 
 # Create and glue for size 1
 combinations_1 <- c("X1","X2","X3","X4")
 
 
 # Create a loop which finds mse for all combinations of X1, X2, X3, X4 of sizes 3,2,1
-mse_results_sim1 <- c()
-mse_results_sim5 <- c()
+mse_results_sim1_3 <- c()
+mse_results_sim1_2 <- c()
+mse_results_sim1_1 <- c()
+
+mse_results_sim5_3 <- c()
+mse_results_sim5_2 <- c()
+mse_results_sim5_1 <- c()
 for (i in 1:length(combinations_3)) {
-  mse_results_sim1[i] <- mse(sim1_split$train, sim1_split$test, model = glue(combinations_3[i]))
-  mse_results_sim5[i] <- mse(sim5_split$train, sim5_split$test, model = glue(combinations_3[i]))
+  mse_results_sim1_3[i] <- mse(sim1_split$train, sim1_split$test, model = glue(combinations_3[i]))
+  mse_results_sim1_2[i] <- mse(sim1_split$train, sim1_split$test, model = glue(combinations_2[i]))
+  mse_results_sim1_1[i] <- mse(sim1_split$train, sim1_split$test, model = glue(combinations_1[i]))
+
+  mse_results_sim5_3[i] <- mse(sim5_split$train, sim5_split$test, model = glue(combinations_3[i]))
+  mse_results_sim5_2[i] <- mse(sim5_split$train, sim5_split$test, model = glue(combinations_2[i]))
+  mse_results_sim5_1[i] <- mse(sim5_split$train, sim5_split$test, model = glue(combinations_1[i]))
 }
-#choose only variables x1 and x2 in tidy with subset
 
 
-mse_results_sim1 <- numeric(length(combinations_3))
-mse_results_sim5 <- numeric(length(combinations_3))
+mse_results_sim3_3 <- c()
+mse_results_sim3_2 <- c()
+mse_results_sim3_1 <- c()
 
-for (i in seq_along(combinations_3)) {
-  mse_results_sim1[i] <- mse(sim1_split$train, sim1_split$test, model = combinations_3[[i]])
-  mse_results_sim5[i] <- mse(sim5_split$train, sim5_split$test, model = combinations_3[[i]])
+mse_results_sim7_3 <- c()
+mse_results_sim7_2 <- c()
+mse_results_sim7_1 <- c()
+for (i in 1:length(combinations_3)) {
+  mse_results_sim3_3[i] <- missclassification_rate(sim3_split$train, sim3_split$test, model = glue(combinations_3[i]))
+  mse_results_sim3_2[i] <- missclassification_rate(sim3_split$train, sim3_split$test, model = glue(combinations_2[i]))
+  mse_results_sim3_1[i] <- missclassification_rate(sim3_split$train, sim3_split$test, model = glue(combinations_1[i]))
+
+  mse_results_sim7_3[i] <- missclassification_rate(sim7_split$train, sim7_split$test, model = glue(combinations_3[i]))
+  mse_results_sim7_2[i] <- missclassification_rate(sim7_split$train, sim7_split$test, model = glue(combinations_2[i]))
+  mse_results_sim7_1[i] <- missclassification_rate(sim7_split$train, sim7_split$test, model = glue(combinations_1[i]))
 }
+
