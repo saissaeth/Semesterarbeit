@@ -16,6 +16,9 @@ library("colorspace")
 library("htesim")
 library("ggpubr")
 
+# htesim ------------------------------------------------------------------
+
+
 # Load data
 set.seed(290875)
 load(system.file("extdata/blood.rda", package = "htesim"))
