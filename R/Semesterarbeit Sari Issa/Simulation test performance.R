@@ -39,7 +39,7 @@ sim8_split <- train_test_split(sim8)
 
 #Find MSE on test performance
 mse <- function(train, test, model) {
-  rf <- randomForest(y ~ ., data = train[, c("y", model)], ntree = 100)
+  rf <- randomForest(y ~ ., data = train[, c("y",  unlist(strsplit(model, "\\+")))], ntree = 100)
   y_hat <- predict(rf, test)
   return(mean((as.numeric(y_hat) - test$y)^2)) #return MSE
 }
