@@ -151,65 +151,57 @@ combinations_df <- map_dfr(1:3, ~ {
   data.frame(Model = combinations, size = size)
 })
 
+
 #Create an empty tibble with columns for MSE, Model_Size, and Variables
-result_normal_dgp <- tibble(
-  MSE = numeric(length(combinations_3) * 3),
-  Model_Size = rep(c(3, 2, 1), each = length(combinations_3)),
-  Variables = character(length(combinations_3) * 3)
-)
-#For loop to fill in the tibble with the MSE results
-index <- 1
-for (i in seq_along(combinations_3)) {
-  for (j in 3:1) {
-    mse_result <- mse(sim1_split$train, sim1_split$test, model = combinations_3[[i]])
-    result_normal_dgp <- within(result_normal_dgp, {
-      MSE[index] <- mse_result
-      Variables[index] <- combinations_3[[i]]
-    })
-    index <- index + 1
-  }
-}
-
-
-
-
-
-
-for (i in 1:length(combinations_3)) {
-  mse_results_sim1_3[i] <- mse(sim1_split$train, sim1_split$test, model = glue(combinations_3[i]))
-  mse_results_sim1_2[i] <- mse(sim1_split$train, sim1_split$test, model = glue(combinations_2[i]))
-  mse_results_sim1_1[i] <- mse(sim1_split$train, sim1_split$test, model = glue(combinations_1[i]))
-
-  mse_results_sim5_3[i] <- mse(sim5_split$train, sim5_split$test, model = glue(combinations_3[i]))
-  mse_results_sim5_2[i] <- mse(sim5_split$train, sim5_split$test, model = glue(combinations_2[i]))
-  mse_results_sim5_1[i] <- mse(sim5_split$train, sim5_split$test, model = glue(combinations_1[i]))
-}
-
-
-mse_results_sim3_3 <- c()
-mse_results_sim3_2 <- c()
-mse_results_sim3_1 <- c()
-
-mse_results_sim7_3 <- c()
-mse_results_sim7_2 <- c()
-mse_results_sim7_1 <- c()
-for (i in 1:length(combinations_3)) {
-  mse_results_sim3_3[i] <- missclassification_rate(sim3_split$train, sim3_split$test, model = glue(combinations_3[i])) %>% bind_cols(., combinations_3[i])
-  mse_results_sim3_2[i] <- missclassification_rate(sim3_split$train, sim3_split$test, model = glue(combinations_2[i]))
-  mse_results_sim3_1[i] <- missclassification_rate(sim3_split$train, sim3_split$test, model = glue(combinations_1[i]))
-
-  mse_results_sim7_3[i] <- missclassification_rate(sim7_split$train, sim7_split$test, model = glue(combinations_3[i]))
-  mse_results_sim7_2[i] <- missclassification_rate(sim7_split$train, sim7_split$test, model = glue(combinations_2[i]))
-  mse_results_sim7_1[i] <- missclassification_rate(sim7_split$train, sim7_split$test, model = glue(combinations_1[i]))
-}
-
-
-# combine the mse results into a dataframe in tidy
-mse_results <- data.frame(
-  MSE = c(mse_results_sim1_3, mse_results_sim1_2, mse_results_sim1_1, mse_results_sim5_3, mse_results_sim5_2, mse_results_sim5_1),
-  Model_Size = rep(c(3, 2, 1), each = length(combinations_3)),
-  Variables = rep(combinations_3, 6)
+result_normal_dgp1 <- tibble(
+  MSE = numeric(length(combinations_df$Model)),
+  Model_Size = combinations_df$size,
+  Variables = combinations_df$Model
 )
 
+# DGP 1
+for (i in 1:length(combinations_df$Model)) {
+  mse_result <- mse(sim1_split$train, sim1_split$test, model = combinations_df$Model[i])
+  result_normal_dgp1$MSE[i] <- mse_result
+}
+#Create an empty tibble with columns for MSE, Model_Size, and Variables
+result_normal_dgp5 <- tibble(
+  MSE = numeric(length(combinations_df$Model)),
+  Model_Size = combinations_df$size,
+  Variables = combinations_df$Model
+)
+# DGP 5
+for (i in 1:length(combinations_df$Model)) {
+  mse_result <- mse(sim5_split$train, sim5_split$test, model = combinations_df$Model[i])
+  result_normal_dgp5$MSE[i] <- mse_result
+}
 
+#Create an empty tibble with columns for missclassification, Model_Size, and Variables
+result_binomial_dgp3 <- tibble(
+  Missclassification = numeric(length(combinations_df$Model)),
+  Model_Size = combinations_df$size,
+  Variables = combinations_df$Model
+)
+
+# DGP 3
+for (i in 1:length(combinations_df$Model)) {
+  miss_result <- missclassification_rate(sim3_split$train, sim3_split$test, model = combinations_df$Model[i])
+  result_binomial_dgp3$Missclassification[i] <- miss_result
+}
+
+# Create an empty tibble with columns for missclassification, Model_Size, and Variables
+result_binomial_dgp7 <- tibble(
+  Missclassification = numeric(length(combinations_df$Model)),
+  Model_Size = combinations_df$size,
+  Variables = combinations_df$Model
+)
+
+# DGP 7
+for (i in 1:length(combinations_df$Model)) {
+  miss_result <- missclassification_rate(sim7_split$train, sim7_split$test, model = combinations_df$Model[i])
+  result_binomial_dgp7$Missclassification[i] <- miss_result
+}
+
+
+# Use ggplot to plot the mse rates for all combinations of model size
 
