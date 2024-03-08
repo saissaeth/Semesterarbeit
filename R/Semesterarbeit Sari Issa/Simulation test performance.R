@@ -204,4 +204,34 @@ for (i in 1:length(combinations_df$Model)) {
 
 
 # Use ggplot to plot the mse rates for all combinations of model size
+ggplot(result_normal_dgp1, aes(x = Model_Size, y = MSE, color = Variables)) +
+  geom_point() +
+  geom_line() +
+  labs(title = "MSE Rates for DGP 1",
+    x = "Model Size",
+    y = "MSE") +
+  theme_minimal()
 
+ggplot(result_normal_dgp5, aes(x = Model_Size, y = MSE, color = Variables)) +
+  geom_point() +
+  geom_line() +
+  labs(title = "MSE Rates for DGP 5",
+    x = "Model Size",
+    y = "MSE") +
+  theme_minimal()
+
+ggplot(result_binomial_dgp3, aes(x = Model_Size, y = Missclassification, color = Variables)) +
+  geom_point() +
+  geom_line() +
+  labs(title = "Missclassification Rates for DGP 3",
+    x = "Model Size",
+    y = "Missclassification") +
+  theme_minimal()
+
+ggplot(result_binomial_dgp7, aes(x = Model_Size, y = Missclassification, color = Variables)) +
+  geom_point() +
+  geom_line() +
+  labs(title = "Missclassification Rates for DGP 7",
+    x = "Model Size",
+    y = "Missclassification") +
+  theme_minimal()
