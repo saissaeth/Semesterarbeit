@@ -4,9 +4,11 @@ require(randomForest)
 require(Hmisc)
 require(glue)
 require(tidyverse)
+require(purrr)
+require(tibble)
 ##############################
 
-source("dgp.R") #source the dgp function
+source("R/dgp.R") #source the dgp function
 ############################# Apply DGP to simulate data and test performance of random forest ##############################
 dgp1 <-
   dgp(
@@ -31,17 +33,17 @@ dgp3 <-
     xmodel = c("normal"),
     rmvar = NULL
   ) #binary outcome
-dgp4 <-
-  dgp(
-    p = 0.5,
-    m = 0,
-    t = 0,
-    sd = 1,
-    ol = 0,
-    model = c("polr"),
-    xmodel = c("normal"),
-    rmvar = NULL
-  ) #ordinal outcome
+# dgp4 <-
+#   dgp(
+#     p = 0.5,
+#     m = 0,
+#     t = 0,
+#     sd = 1,
+#     ol = 0,
+#     model = c("polr"),
+#     xmodel = c("normal"),
+#     rmvar = NULL
+#   ) #ordinal outcome
 
 dgp5 <-
   dgp(
@@ -66,28 +68,28 @@ dgp7 <-
     xmodel = c("unif"),
     rmvar = NULL
   ) #binary outcome
-dgp8 <-
-  dgp(
-    p = 0.5,
-    m = 0,
-    t = 0,
-    sd = 1,
-    ol = 0,
-    model = c("polr"),
-    xmodel = c("unif"),
-    rmvar = NULL
-  ) #ordinal outcome
+# dgp8 <-
+#   dgp(
+#     p = 0.5,
+#     m = 0,
+#     t = 0,
+#     sd = 1,
+#     ol = 0,
+#     model = c("polr"),
+#     xmodel = c("unif"),
+#     rmvar = NULL
+#   ) #ordinal outcome
 
 ######################### simulate ###############
 num_sim <- 1000
 sim1 <- simulate.dgp(dgp1, num_sim)
 #sim2 <- simulate.dgp(dgp2, num_sim)
 sim3 <- simulate.dgp(dgp3, num_sim)
-sim4 <- simulate.dgp(dgp4, num_sim)
+# sim4 <- simulate.dgp(dgp4, num_sim)
 sim5 <- simulate.dgp(dgp5, num_sim)
 #sim6 <- simulate.dgp(dgp6, num_sim)
 sim7 <- simulate.dgp(dgp7, num_sim)
-sim8 <- simulate.dgp(dgp8, num_sim)
+#sim8 <- simulate.dgp(dgp8, num_sim)
 #################################################
 
 
@@ -103,11 +105,11 @@ train_test_split <- function(data, train_size = 0.8) {
 sim1_split <- train_test_split(sim1)
 #sim2_split <- train_test_split(sim2)
 sim3_split <- train_test_split(sim3)
-sim4_split <- train_test_split(sim4)
+#sim4_split <- train_test_split(sim4)
 sim5_split <- train_test_split(sim5)
 #sim6_split <- train_test_split(sim6)
 sim7_split <- train_test_split(sim7)
-sim8_split <- train_test_split(sim8)
+# sim8_split <- train_test_split(sim8)
 ########################################################################
 
 
@@ -137,17 +139,17 @@ concordance.index <- function(train, test, model) {
 ############ Create all combinations of X1, X2, X3, X4 of size 3,2,1
 
 #glue rows into one string x1+x2+x3
-all_combinations <- map(1:3, ~ combn(c("X1", "X2", "X3", "X4"), .x, simplify = FALSE)) %>%
-  flatten() %>%
-  map(~ glue_collapse(.x, "+")) %>%
+all_combinations <- map(1:3, ~ combn(c("X1", "X2", "X3", "X4"), .x, simplify = FALSE))  |>
+  flatten() |>
+  map(~ glue_collapse(.x, "+")) |>
   unlist()
 
 # Create a data frame with combinations and their sizes
 combinations_df <- map_dfr(1:3, ~ {
   size <- .x
   combinations <-
-    combn(c("X1", "X2", "X3", "X4"), size, simplify = FALSE) %>%
-    map( ~ glue_collapse(.x, "+")) %>%
+    combn(c("X1", "X2", "X3", "X4"), size, simplify = FALSE) |>
+    map( ~ glue_collapse(.x, "+")) |>
     unlist()
   data.frame(Model = combinations, size = size)
 })
