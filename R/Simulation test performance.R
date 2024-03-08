@@ -6,6 +6,7 @@ require(glue)
 require(tidyverse)
 ##############################
 
+source("dgp.R") #source the dgp function
 ############################# Apply DGP to simulate data and test performance of random forest ##############################
 dgp1 <-
   dgp(
