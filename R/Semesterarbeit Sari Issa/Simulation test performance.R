@@ -202,36 +202,38 @@ for (i in 1:length(combinations_df$Model)) {
   result_binomial_dgp7$Missclassification[i] <- miss_result
 }
 
-
-# Use ggplot to plot the mse rates for all combinations of model size
-ggplot(result_normal_dgp1, aes(x = Model_Size, y = MSE, color = Variables)) +
+ggplot(result_normal_dgp1, aes(x = Model_Size, y = MSE, color = reorder(Variables, Model_Size))) +
   geom_point() +
   geom_line() +
   labs(title = "MSE Rates for DGP 1",
-    x = "Model Size",
-    y = "MSE") +
-  theme_minimal()
+       x = "Model Size",
+       y = "MSE") +
+  theme_minimal() +
+  guides(color = guide_legend(title = "Variables"))
 
-ggplot(result_normal_dgp5, aes(x = Model_Size, y = MSE, color = Variables)) +
+ggplot(result_normal_dgp5, aes(x = Model_Size, y = MSE, color = reorder(Variables, Model_Size))) +
   geom_point() +
   geom_line() +
   labs(title = "MSE Rates for DGP 5",
-    x = "Model Size",
-    y = "MSE") +
-  theme_minimal()
+       x = "Model Size",
+       y = "MSE") +
+  theme_minimal() +
+  guides(color = guide_legend(title = "Variables"))
 
-ggplot(result_binomial_dgp3, aes(x = Model_Size, y = Missclassification, color = Variables)) +
+ggplot(result_binomial_dgp3, aes(x = Model_Size, y = Missclassification, color = reorder(Variables, Model_Size))) +
   geom_point() +
   geom_line() +
   labs(title = "Missclassification Rates for DGP 3",
-    x = "Model Size",
-    y = "Missclassification") +
-  theme_minimal()
+       x = "Model Size",
+       y = "Missclassification") +
+  theme_minimal() +
+  guides(color = guide_legend(title = "Variables"))
 
-ggplot(result_binomial_dgp7, aes(x = Model_Size, y = Missclassification, color = Variables)) +
+ggplot(result_binomial_dgp7, aes(x = Model_Size, y = Missclassification, color = reorder(Variables, Model_Size))) +
   geom_point() +
   geom_line() +
   labs(title = "Missclassification Rates for DGP 7",
-    x = "Model Size",
-    y = "Missclassification") +
-  theme_minimal()
+       x = "Model Size",
+       y = "Missclassification") +
+  theme_minimal() +
+  guides(color = guide_legend(title = "Variables"))
