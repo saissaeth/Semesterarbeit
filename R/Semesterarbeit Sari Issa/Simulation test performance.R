@@ -1,5 +1,5 @@
 ## Libraries##################
-
+require(dplyr)
 require(randomForest)
 require(Hmisc)
 require(glue)
@@ -136,76 +136,80 @@ concordance.index <- function(train, test, model) {
 ############ Create all combinations of X1, X2, X3, X4 of size 3,2,1
 
 #glue rows into one string x1+x2+x3
-combinations_3 <- combn(c("X1", "X2", "X3", "X4"), 3, simplify = FALSE) %>%
+all_combinations <- map(1:3, ~ combn(c("X1", "X2", "X3", "X4"), .x, simplify = FALSE)) %>%
+  flatten() %>%
   map(~ glue_collapse(.x, "+")) %>%
   unlist()
 
-# Create a table of combinations of c("X1","X2","X3","X4") of size 2
-combinations_3 <- combn(c("X1", "X2", "X3", "X4"), 2, simplify = FALSE) %>%
-  map(~ glue_collapse(.x, "+")) %>%
-  unlist()
+# Create a data frame with combinations and their sizes
+combinations_df <- map_dfr(1:3, ~ {
+  size <- .x
+  combinations <-
+    combn(c("X1", "X2", "X3", "X4"), size, simplify = FALSE) %>%
+    map( ~ glue_collapse(.x, "+")) %>%
+    unlist()
+  data.frame(Model = combinations, size = size)
+})
 
-# Create and glue for size 1
-combinations_1 <- c("X1","X2","X3","X4")
-result_1 <- list()
-result_2 <- list()
-result_3 <- list()
-result_4 <- list()
-result_5 <- list()
-result_6 <- list()
-result_7 <- list()
-result_8 <- list()
-
-for (k in c(1,5)) {
-  assign(glue("result_", k),
-         data.frame(
-           MSE = numeric(length(combinations_3) * 3),
-           Model_Size = rep(c(3, 2, 1), each = length(combinations_3)),
-           Variables = character(length(combinations_3) * 3)
-         ))
-
-  index <- 1
-
-  for (i in seq_along(combinations_3)) {
-    for (j in 3:1) {
-      mse_result <- mse(get(glue("sim", k, "_split"))$train,
-                        get(glue("sim", k, "_split"))$test,
-                        model = combinations_3[[i]])
-      assign(glue("result_", k),
-             within(get(glue("result_", k)), {
-               MSE[index] <- mse_result
-               Variables[index] <- combinations_3[[i]]
-             }),
-             envir = .GlobalEnv)
-      index <- index + 1
-    }
+#Create an empty tibble with columns for MSE, Model_Size, and Variables
+result_normal_dgp <- tibble(
+  MSE = numeric(length(combinations_3) * 3),
+  Model_Size = rep(c(3, 2, 1), each = length(combinations_3)),
+  Variables = character(length(combinations_3) * 3)
+)
+#For loop to fill in the tibble with the MSE results
+index <- 1
+for (i in seq_along(combinations_3)) {
+  for (j in 3:1) {
+    mse_result <- mse(sim1_split$train, sim1_split$test, model = combinations_3[[i]])
+    result_normal_dgp <- within(result_normal_dgp, {
+      MSE[index] <- mse_result
+      Variables[index] <- combinations_3[[i]]
+    })
+    index <- index + 1
   }
 }
 
-for (k in c(3,7)) {
-  assign(glue("result_", k),
-         data.frame(
-           missclassification = numeric(length(combinations_3) * 3),
-           Model_Size = rep(c(3, 2, 1), each = length(combinations_3)),
-           Variables = character(length(combinations_3) * 3)
-         ))
 
-  index <- 1
 
-  for (i in seq_along(combinations_3)) {
-    for (j in 3:1) {
-      miss_rate <- missclassification_rate(get(glue("sim", k, "_split"))$train,
-                        get(glue("sim", k, "_split"))$test,
-                        model = combinations_3[[i]])
-      assign(glue("result_", k),
-             within(get(glue("result_", k)), {
-               missclassification[index] <- miss_rate
-               Variables[index] <- combinations_3[[i]]
-             }),
-             envir = .GlobalEnv)
-      index <- index + 1
-    }
-  }
+
+
+
+for (i in 1:length(combinations_3)) {
+  mse_results_sim1_3[i] <- mse(sim1_split$train, sim1_split$test, model = glue(combinations_3[i]))
+  mse_results_sim1_2[i] <- mse(sim1_split$train, sim1_split$test, model = glue(combinations_2[i]))
+  mse_results_sim1_1[i] <- mse(sim1_split$train, sim1_split$test, model = glue(combinations_1[i]))
+
+  mse_results_sim5_3[i] <- mse(sim5_split$train, sim5_split$test, model = glue(combinations_3[i]))
+  mse_results_sim5_2[i] <- mse(sim5_split$train, sim5_split$test, model = glue(combinations_2[i]))
+  mse_results_sim5_1[i] <- mse(sim5_split$train, sim5_split$test, model = glue(combinations_1[i]))
 }
 
-miss_rate
+
+mse_results_sim3_3 <- c()
+mse_results_sim3_2 <- c()
+mse_results_sim3_1 <- c()
+
+mse_results_sim7_3 <- c()
+mse_results_sim7_2 <- c()
+mse_results_sim7_1 <- c()
+for (i in 1:length(combinations_3)) {
+  mse_results_sim3_3[i] <- missclassification_rate(sim3_split$train, sim3_split$test, model = glue(combinations_3[i])) %>% bind_cols(., combinations_3[i])
+  mse_results_sim3_2[i] <- missclassification_rate(sim3_split$train, sim3_split$test, model = glue(combinations_2[i]))
+  mse_results_sim3_1[i] <- missclassification_rate(sim3_split$train, sim3_split$test, model = glue(combinations_1[i]))
+
+  mse_results_sim7_3[i] <- missclassification_rate(sim7_split$train, sim7_split$test, model = glue(combinations_3[i]))
+  mse_results_sim7_2[i] <- missclassification_rate(sim7_split$train, sim7_split$test, model = glue(combinations_2[i]))
+  mse_results_sim7_1[i] <- missclassification_rate(sim7_split$train, sim7_split$test, model = glue(combinations_1[i]))
+}
+
+
+# combine the mse results into a dataframe in tidy
+mse_results <- data.frame(
+  MSE = c(mse_results_sim1_3, mse_results_sim1_2, mse_results_sim1_1, mse_results_sim5_3, mse_results_sim5_2, mse_results_sim5_1),
+  Model_Size = rep(c(3, 2, 1), each = length(combinations_3)),
+  Variables = rep(combinations_3, 6)
+)
+
+
+
