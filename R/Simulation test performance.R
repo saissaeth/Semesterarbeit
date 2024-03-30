@@ -113,11 +113,25 @@ results <- mapply(single_iteration,
                   Suffix = model_dim_tibble$suffixes,
                   rho = model_dim_tibble$Rho,
                   Dim = model_dim_tibble$Dimensions,
-                  SIMPLIFY = FALSE)
+                  SIMPLIFY = TRUE)
 
 
+results_tibble <- tibble(
+  tau_hat = map_dbl(results, "tau_hat"),
+  resid = map(results, "resid"),
+  rho = map(results, "rho"),
+  # Collapse each numeric list into a single string and convert to factor
+  Forest = map_chr(results, ~ paste(unlist(.x$Forest), collapse = "_")) %>% factor(),
+  # Convert model entries into factors
+  model = map_chr(results, "model") %>% factor(),
+  Dim = map(results, "Dim")
+)
 
-pmd_rho %>%
+
+#plot the results
+
+
+results %>%
   filter(tau == 0.25) %>%
   ggplot(aes(x=dim, y=tau_hats)) +
   geom_point()+
