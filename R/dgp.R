@@ -114,6 +114,7 @@ sanitize_fct <- function(fct, call) {
 #' @param seed (numeric(1)) Seed for data generation, default NULL.
 #' @param dim (numeric(1)) Dimension, number of predictors (p), default 4.
 #' @param nsimtest (numeric(1)) Number of observations (n) for test dataset.
+#' @param rho (numeric(1)) Correlation between Variables 1:5 and 6:10, default 0.
 #' Default NULL means that no test dataset is generated.
 #' @param ... Additional optional arguments.
 #' @seealso \code{\link{dgp}}
@@ -140,7 +141,7 @@ sanitize_fct <- function(fct, call) {
 #' head(testdf)
 #'
 #' @export
-simulate.dgp <- function(object, nsim = 1, seed = NULL, dim = 4, nsimtest = NULL, ...) {
+simulate.dgp <- function(object, nsim = 1, rho=0, seed = NULL, dim = 4, nsimtest = NULL, ...) {
 
   ###  input checks
   checkmate::assertIntegerish(nsim, lower = 1, len = 1, any.missing = FALSE)
@@ -180,9 +181,24 @@ simulate.dgp <- function(object, nsim = 1, seed = NULL, dim = 4, nsimtest = NULL
   ### prognostic and predictive variables
   ### generate dedicated test set here
   if (object$xmodel == "normal") {
-    x <- matrix(rnorm(nsim * dim), nrow = nsim, ncol = dim)
+    # Specify the covariance matrix
+    # Initialize the covariance matrix with zeros
+    cov_matrix <- matrix(0, nrow = dim, ncol = dim)
+
+    # Identity matrices for variables 1:5 and 6:20
+    cov_matrix[1:5, 1:5] <- diag(5)
+    cov_matrix[6:20, 6:20] <- diag(15)
+
+    # Correlation of rho for variables 1:5 with 6:10 (and vice versa)
+    # Making sure to multiply rho by the identity matrix for these sections
+    cov_matrix[1:5, 6:10] <- rho * diag(5)
+    cov_matrix[6:10, 1:5] <- rho * diag(5)
+
+    # Generate random variables with the specified covariance matrix
+    x <- MASS::mvrnorm(nsim, rep(0, dim), cov_matrix)
+
     if (!is.null(nsimtest)) {
-      testx <- matrix(rnorm(nsimtest * dim), nrow = nsimtest, ncol = dim)
+      testx <- MASS::mvrnorm(nsimtest, rep(0, dim), cov_matrix)
     }
   } else if (object$xmodel == "unif") {
     x <- matrix(runif(nsim * dim), nrow = nsim, ncol = dim)
