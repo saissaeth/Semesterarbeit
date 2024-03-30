@@ -92,66 +92,30 @@ residuals <- list()
 results <- list()
 dims <- list()
 suffixes <- c("zero", "small", "med", "big", "one")
-tau_vec <- c(0, 0.25, 0.5, 0.75, 1)
 rho_sizes <- c(0,0.25,0.5,0.75)
 # Define your dimensions and corresponding labels
 dim_vec <- list(c(1:20), c(1:5), c(1:3, 6:20), c(2:20), c(3:20), c(4:20))
 labels <- t(c("A", "B", "C", "D", "E","F"))
-bind_cols(dim_vec, labels)
 
-# Create the tibble
-model_dim_tibble <- tibble(Model = labels, Dimensions = dim_vec, True_Tau = tau_vec, Rho = rho_sizes, stringsAsFactors = FALSE)
+# Create the tibble, tibble to keep the list format for Dimensions
+model_dim_tibble <- expand_grid(suffixes = suffixes, Dimensions = dim_vec, Rho = rho_sizes)
 
 # Loop through the dimensions and rho sizes
-single_iteration <- function(Model, rho, Dim) {
-  model_name <- glue("dgp1_{Model}")
+single_iteration <- function(Suffix, rho, Dim) {
+  model_name <- glue("dgp1_{Suffix}")
   result <- apply_dgp_rho(get(model_name), 10, Dim, rho) # Your function call
-  list(tau_hat = result$tau_hat, resid = result$resid, rho = rho, Forest = paste0(model_dim_tibble$Model), model = model_name)
+  list(tau_hat = result$tau_hat, resid = result$resid, rho = rho, Forest = paste0(Dim), model = model_name)
 }
 
-# Expand grid for all combinations of dimensions, suffixes and rho sizes
-all_iterations <- model_dim_tibble %>%
-  expand(Model=model_dim_tibble$Model , Dim = model_dim_tibble$Dimensions, rho = as.numeric(rho_sizes), True_Tau= suffixes)
 
-# Apply the function to all combinations
-results_list <- apply(all_iterations, 1, function(row) single_iteration(model_dim_tibble[row["Dim"]], row["Rho"], row["True_Tau"]))
-
-
-
-results_list <- apply(all_iterations, 1, function(row) {
-  rho <- as.numeric(row["Rho"])  # Convert rho to numeric
-  single_iteration(
-    dim_vec[[row["Dim"]]],  # Access the correct dimension from dim_vec using double brackets
-    rho,
-    row["True_Tau"]
-  )
-})
+# Use mapply to iterate over the rows. mapply will automatically loop over each vector's elements.
+results <- mapply(single_iteration,
+                  Suffix = model_dim_tibble$suffixes,
+                  rho = model_dim_tibble$Rho,
+                  Dim = model_dim_tibble$Dimensions,
+                  SIMPLIFY = FALSE)
 
 
-# for (dim in dim_vec){
-#   for (rho in rho_sizes) {
-#     for (suffix in suffixes) {
-#       model_name <- glue("dgp1_{suffix}")
-#         result <- apply_dgp_rho(get(model_name), 10, dim, rho) # Placeholder for your function's result
-#         # Collect the data
-#         #Extract pred
-#         results <- c(results, result)
-#         tau_hats <- c(tau_hats, result$tau_hat)
-#         residuals <- c(residuals, result$resid)
-#         taus <- c(taus, tau)
-#         rhos <- c(rhos, rho)
-#         dim <- c(dims,dim)
-#
-#         models <- c(models, model_name)
-#     }
-#   }
-# }
-#
-# length(tau_hats)
-#
-# # Now create the tibble
-# pmd_rho <- tibble(rho = rhos, model = models, tau = taus, tau_hats = tau_hats, dim = as_factor(glue(dims)))
-# # Print the results
 
 pmd_rho %>%
   filter(tau == 0.25) %>%
