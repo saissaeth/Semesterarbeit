@@ -10,9 +10,11 @@ library("htesim")
 library(tidyr)
 library(purrr)
 ##############################
-
+pkgs <- c("randomForest", "Hmisc", "glue", "tidyverse", "grf", "dplyr", "gridExtra", "htesim", "tidyr", "purrr")
 source("R/dgp.R") #source the dgp function
 source("R/functions.R")
+
+# lapply(pkgs,require)
 ############################# Apply DGP to simulate data and test performance of random forest ##############################
 # set.seed(8008)
 #
@@ -59,20 +61,20 @@ selected_data <- dandl %>%
 # study1 <- selected_data[1,]
 #
 #
-dgp1 <- do.call(dgp,
-                 as.list(selected_data)[c("p", "m", "t", "sd", "ol", "model", "xmodel")])
-#
- sim1 <- do.call(simulate.dgp, c(list(object = dgp1),
-                             as.list(selected_data)[c("nsim", "dim", "seed", "nsimtest")]))
-#
- head(sim1)
-#
-#
- testdf <- attr(sim1, "testxdf")
- head(testdf)
-#
-tau <- predict(dgp1, newdata = testdf)[, "tfct"]
-head(tau)
+# dgp1 <- do.call(dgp,
+#                  as.list(selected_data)[c("p", "m", "t", "sd", "ol", "model", "xmodel")])
+# #
+#  sim1 <- do.call(simulate.dgp, c(list(object = dgp1),
+#                              as.list(selected_data)[c("nsim", "dim", "seed", "nsimtest")]))
+# #
+#  head(sim1)
+# #
+# #
+#  testdf <- attr(sim1, "testxdf")
+#  head(testdf)
+# #
+# tau <- predict(dgp1, newdata = testdf)[, "tfct"]
+# head(tau)
 #
 
 apply_dgp_rho <- function(dim,seed,p, m, t, sd, ol) {
