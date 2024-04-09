@@ -145,7 +145,7 @@ sc <- function(which.given, ..., factor.levels) {
                   factor.levels)
   }
 }
-@
+
 # Fill each entry with boxplots
 mypanel <- function(x, y, groups, subscripts, ...) {
   fill <- cols[intersect(levels(x), unique(x))]
