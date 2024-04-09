@@ -143,6 +143,6 @@ results %>%
 # TODO fix Dims variable to be ABCDE
 # Add additional plots for different values of tau
 # Add additional sims
-# Ask Hothorn about tau hat
+# Ask Prof. Hothorn about tau hat
 # loop through taus
 # Add MSE visualization for residuals
