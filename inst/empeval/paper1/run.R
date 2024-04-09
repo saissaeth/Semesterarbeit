@@ -43,8 +43,43 @@ run <- function(
   stabilize.splits = TRUE,
   ### return ATE (trt effect of base model)
   ATE = FALSE,
+  setup = NULL,
   ...
 ) {
+
+  dim_vec <-
+    list(
+      "A" = c(1:20),
+      "B" = c(1:5),
+      "C" = c(1:3, 6:20),
+      "D" = c(2:20),
+      "E" = c(3:20),
+      "F" = c(4:20)
+    )
+
+  # Function to subset data based on a given parameter setup ("A", "B", "C", ...)
+  subset_data_by_setup <- function(data, setup) {
+    # Check if the setup is valid
+    if (!(setup %in% c("A", "B", "C", "D", "E", "F"))) {
+      stop("Invalid setup. Please use one of: A, B, C, D, E, F.")
+    }
+
+    # Access the vector associated with the given setup
+    dim <- dim_vec[[setup]]
+
+    # Generate variable names based on the vector
+    x_vars <- paste0("X", dim)
+
+    # Subset the data using the generated variable names
+    d <- data[, x_vars, drop = FALSE]
+
+    return(d)
+  }
+
+  if (!is.null(setup)) {
+    d <- subset_data_by_setup(d, setup)
+  }
+
 
   seed <- attributes(d)$runseed
 
