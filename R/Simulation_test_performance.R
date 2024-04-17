@@ -11,12 +11,12 @@ library(tidyr)
 library(purrr)
 library(partykit)
 ##############################
-pkgs <- c("randomForest", "Hmisc", "glue", "tidyverse", "grf", "dplyr", "gridExtra", "htesim", "tidyr", "purrr")
+# pkgs <- c("randomForest", "Hmisc", "glue", "tidyverse", "grf", "dplyr", "gridExtra", "htesim", "tidyr", "purrr")
 source("R/dgp.R") #source the dgp function
 source("R/functions.R")
 source("inst/empeval/paper1/run.R")
-dgp1 <- dgp(p=0.5,m=0,t=0,sd=1,ol=0.5,model="normal",xmodel="unif",rmvar="X20")
-sim <- simulate.dgp(object=dgp1,rho=0,nsim=1600,d=20,nsimtest=1000)
+# dgp1 <- dgp(p=0.5,m=0,t=0,sd=1,ol=0.5,model="normal",xmodel="unif",rmvar="X20")
+# sim <- simulate.dgp(object=dgp1,rho=0,nsim=1600,d=20,nsimtest=1000)
 
 # lapply(pkgs,require)
 ############################# Apply DGP to simulate data and test performance of random forest ##############################
