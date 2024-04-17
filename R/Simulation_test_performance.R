@@ -58,6 +58,7 @@ run_new <- function(sim){
   rf <- causal_forest(X = as.matrix(X), Y = Y, W = W, num.trees = 1000, seed = 8008)
   X_testdf <- attr(sim, "testxdf") %>% select(all_of(x_vars))
   tau.hat  <- predict(rf, X_testdf)$predictions
+  return(tau.hat)
 }
 
 
