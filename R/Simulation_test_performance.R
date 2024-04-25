@@ -63,7 +63,7 @@ run_new <- function(Setup,Varmiss,rhos){
   X <- as.matrix(sim[, x_vars, drop = FALSE])
   Y <- c(sim$y)
   W <- as.numeric(c(sim$trt))
-  rf <- causal_forest(X = as.matrix(X), Y = Y, W = W, num.trees = 1000, seed = 8008)
+  rf <- causal_forest(X = as.matrix(X), Y = Y, W = W, num.trees = 100, seed = 8008)
   X_test_all <- attr(sim, "testxdf")
   X_test <- attr(sim, "testxdf") %>% select(all_of(x_vars))
   true_tau <- predict(sim,X_test_all)$tfct
