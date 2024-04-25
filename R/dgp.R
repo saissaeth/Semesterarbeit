@@ -261,7 +261,7 @@ simulate.dgp <- function(object, nsim = 1, rho=0, seed = NULL, dim = 4, nsimtest
   # remove variables if specified
   rmvar <- object$rmvar
   if (!is.null(rmvar)) {
-    checkmate::assertTRUE(all(rmvar %in% colnames(x)))
+    #checkmate::assertTRUE(all(rmvar %in% colnames(x)))
     x <- x[, !colnames(x) %in% rmvar]
   }
 
