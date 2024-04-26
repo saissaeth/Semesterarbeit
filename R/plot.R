@@ -104,7 +104,7 @@ ylab <- expression(paste(frac(1, 1000), "",
 
 # plotting function
 plot_results <- function(results_random, sc, ylim) {
-  plt <- bwplot(MSE ~ Setup + Varmiss, data = results,
+  plt <- bwplot(MSE ~ Setup | Varmiss, data = results,
                 ylab = list(ylab), ylim = ylim,
                 groups = repl, panel = mypanel,
                 as.table = TRUE, strip = sc, key = mykey,
@@ -116,3 +116,4 @@ plot_results(res, sc = TRUE)
 
 # save as pdf
 pdf("results.pdf", width = 8.5, height = 11)
+#
