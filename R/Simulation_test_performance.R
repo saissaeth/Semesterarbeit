@@ -92,93 +92,11 @@ save(results,file="results_cf.Rda")
 
 load("results_cf.Rda")
 methodnams <- c("1", "2", "3", "4", "5","6")
-#
-#
-levels(results$Varmiss) <- methodnams
-#
-# #################################################################################
-# ############################## Plot the results #################################
-# #################################################################################
-# ######
-#
-# plt <- bwplot(All_Mse ~ setup | dim_vec, data = data,
-#               ylab = list(ylab), ylim = ylim,
-#               groups = setup, panel = mypanel,
-#               as.table = TRUE, strip = sc, key = mykey,
-#               scales = list(relation = "same", x = list(rot = 60, labels = colornams)))
-# # Plotting function
-# plot_results <- function(data, sc, ylim) {
-#   plt <- bwplot(All_Mse ~ setup | dim_vec, data = data,
-#                 ylab = list(ylab), ylim = ylim,
-#                 groups = setup, panel = mypanel,
-#                 as.table = TRUE, strip = sc, key = mykey,
-#                 scales = list(relation = "same", x = list(rot = 60, labels = colornams)))
-#   useOuterStrips(plt, strip = sc)
-# }
-#
-# # Now call the plot_results function with the long-form data
-# plot_results(results_long, sc = sc, ylim = c(0, max(unlist(grouped_result$All_Mse))))
-#
-# results %>%
-#   mutate(Varmiss = as.factor(Varmiss)) %>%
-#   mutate(Setup = as.factor(Setup))
-#
-# p <- ggplot(results, aes(x = Varmiss, y = MSE)) +
-#   geom_boxplot() +
-#   facet_wrap(~ Setup, scales = 'free') +
-#   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-#   labs(x = "Varmiss", y = "MSE", title = "MSE by Varmiss and Setup")
-# print(p)
-#
-#
-#
-####
 
+levels(results$Varmiss) <- methodnams
 
 
 cols <- RColorBrewer::brewer.pal(6,"Spectral")
-
-# # TODO fix Dims variable to be ABCDE
-# # Add additional plots for different values of tau
-# # Add additional sims
-# # Ask Hothorn about tau hat
-# # loop through taus
-# Add MSE visualization for residua
-
-# bwplot(
-#   MSE ~ Setup |
-#     Varmiss,
-#   data = results,
-#   ylab = "Cylinders",
-#   xlab = "Miles per Gallon",
-#   main = "Mileage by Cylinders and Gears",
-#   layout = (c(1, 3)))
-#
-# plot_results <- function(data, sc, ylim) {
-#   plt <- bwplot(MSE ~ Setup | Varmiss, data = results, ylim = 1,
-#                 groups = Setup)
-# }
-# plt
-# results_0 <- results %>%
-#   filter(rho == 0)
-# results_0.25 <- results %>%
-#   filter(rho == 0.25)
-# results_0.5 <- results %>%
-#   filter(rho == 0.5)
-# results_0.75 <- results %>%
-#   filter(rho == 0.75)
-#
-# bwplot(MSE ~ Varmiss | Setup, data = results_0, layout =c(4,1), main = "rho = 0")
-# bwplot(MSE ~ Varmiss | Setup, data = results_0.25, layout =c(4,1))
-# bwplot(MSE ~ Varmiss | Setup, data = results_0.5, layout =c(4,1))
-# bwplot(MSE ~ Varmiss | Setup, data = results_0.75, layout =c(4,1))
-#
-# # Add all plots into one big panel
-# grid.arrange(bwplot(MSE ~ Varmiss | Setup, data = results_0, layout =c(4,1)),
-#              bwplot(MSE ~ Varmiss | Setup, data = results_0.25, layout =c(4,1)),
-#              bwplot(MSE ~ Varmiss | Setup, data = results_0.5, layout =c(4,1)),
-#              bwplot(MSE ~ Varmiss | Setup, data = results_0.75, layout =c(4,1),
-#              ncol = 4))
 
 p <- ggplot(results, aes(x = Setup, y = MSE, fill = Varmiss)) +
   geom_violin() +
