@@ -81,7 +81,7 @@ run_new_y <- function(Setup,Varmiss,rhos){
   X_test_all <- attr(sim, "testxdf")
   X_test <- attr(sim, "testxdf") %>% select(all_of(x_vars))
   y_hat <- predict(rf, X_test)
-  return(MSE = mean((y_hat - y)^2))
+  return(MSE = mean((y_hat - Y)^2))
 }
 
 # results <-
