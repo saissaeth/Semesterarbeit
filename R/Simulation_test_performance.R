@@ -10,8 +10,8 @@ library(gridExtra)
 library(tidyr)
 library(purrr)
 #library(partykit)
-library("lattice")
-library("latticeExtra")
+#library("lattice")
+#library("latticeExtra")
 ##############################
 pkgs <- c("randomForest", "Hmisc", "glue", "tidyverse", "grf", "dplyr", "gridExtra", "htesim", "tidyr", "purrr")
 #Set wd one layer before
