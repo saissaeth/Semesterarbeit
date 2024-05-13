@@ -9,7 +9,7 @@ library(gridExtra)
 #library("htesim")
 library(tidyr)
 library(purrr)
-library(partykit)
+#library(partykit)
 library("lattice")
 library("latticeExtra")
 ##############################
