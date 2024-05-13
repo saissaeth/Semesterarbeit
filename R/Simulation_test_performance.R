@@ -1,19 +1,19 @@
 ## Libraries##################
-library(randomForest)
+#library(randomForest)
 library(Hmisc)
 library(glue)
 library(tidyverse)
 library(grf)
 library(dplyr)
 library(gridExtra)
-library("htesim")
+#library("htesim")
 library(tidyr)
 library(purrr)
 library(partykit)
 library("lattice")
 library("latticeExtra")
 ##############################
-# pkgs <- c("randomForest", "Hmisc", "glue", "tidyverse", "grf", "dplyr", "gridExtra", "htesim", "tidyr", "purrr")
+pkgs <- c("randomForest", "Hmisc", "glue", "tidyverse", "grf", "dplyr", "gridExtra", "htesim", "tidyr", "purrr")
 #Set wd one layer before
 setwd("..")
 source("R/dgp.R") #source the dgp function
