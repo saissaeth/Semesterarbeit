@@ -14,6 +14,8 @@ library("lattice")
 library("latticeExtra")
 ##############################
 # pkgs <- c("randomForest", "Hmisc", "glue", "tidyverse", "grf", "dplyr", "gridExtra", "htesim", "tidyr", "purrr")
+#Set wd one layer before
+setwd("..")
 source("R/dgp.R") #source the dgp function
 source("R/functions.R")
 #source("inst/empeval/paper1/run.R")
