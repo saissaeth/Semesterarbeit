@@ -108,7 +108,7 @@ resultsy <-
     Setup = LETTERS[1:4],
     Varmiss = paste0(dim_vec),
     repl = seq(1, 1000, 1),
-    rho = c(0)#,0.25,0.5,0.75)
+    rho = c(0.75)#,0.25,0.5,0.75)
   ) %>%
   mutate(Setup = as.factor(Setup)) %>%
   mutate(Varmiss = paste0(Varmiss)) %>%
@@ -122,7 +122,7 @@ resultsy <-
 
 #hallo
 #save(results,file="results_cf.Rda")
-save(resultsy,file="resultsy_rho0_cf.Rda")
+save(resultsy,file="resultsy_rho0.75_cf.Rda")
 #
 # load("results_cf.Rda")
 # methodnams <- c("1", "2", "3", "4", "5","6")
