@@ -103,13 +103,11 @@ run_new_y <- function(Setup,Varmiss,rhos){
 #     rhos = rho
 #   ))
 
-resultsy <-
-  expand_grid(
+resultsy <-  expand_grid(
     Setup = LETTERS[1:4],
     Varmiss = paste0(dim_vec),
     repl = seq(1, 1000, 1),
-    rho = c(0.5)#,0.25,0.5,0.75)
-  ) %>%
+    rho = c(0.5)) %>%
   mutate(Setup = as.factor(Setup)) %>%
   mutate(Varmiss = paste0(Varmiss)) %>%
   mutate(Varmiss = as.factor(Varmiss)) %>%
