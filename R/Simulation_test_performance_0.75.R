@@ -107,7 +107,7 @@ resultsy <-
   expand_grid(
     Setup = LETTERS[1:4],
     Varmiss = paste0(dim_vec),
-    repl = seq(1, 1000, 1),
+    repl = seq(1, 100, 1),
     rho = c(0.75)#,0.25,0.5,0.75)
   ) %>%
   mutate(Setup = as.factor(Setup)) %>%
