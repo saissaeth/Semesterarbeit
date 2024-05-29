@@ -103,13 +103,11 @@ run_new_y <- function(Setup,Varmiss,rhos){
 #     rhos = rho
 #   ))
 
-resultsy <-
-  expand_grid(
-    Setup = LETTERS[1],
+resultsy <-  expand_grid(
+    Setup = LETTERS[3],
     Varmiss = paste0(dim_vec),
     repl = seq(1, 1000, 1),
-    rho = c(0.75)#,0.25,0.5,0.75)
-  ) %>%
+    rho = c(0.5)) %>%
   mutate(Setup = as.factor(Setup)) %>%
   mutate(Varmiss = paste0(Varmiss)) %>%
   mutate(Varmiss = as.factor(Varmiss)) %>%
@@ -122,7 +120,7 @@ resultsy <-
 
 #hallo
 #save(results,file="results_cf.Rda")
-save(resultsy,file="resultsy_rho0.75_cf.Rda")
+save(resultsy,file="resultsy_rho0.5_cf.Rda")
 #
 # load("results_cf.Rda")
 # methodnams <- c("1", "2", "3", "4", "5","6")
