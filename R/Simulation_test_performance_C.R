@@ -122,7 +122,40 @@ resultsy <-
 
 #hallo
 #save(results,file="results_cf.Rda")
-save(resultsy,file="resultsy_rho0_cf.Rda")
+# Load necessary library
+library(dplyr)
+
+# Define the function to append data to an existing Rda file
+append_to_rda <- function(new_data, file) {
+  # Check if the file exists
+  if (file.exists(file)) {
+    # Load the existing data
+    load(file)
+
+    # Assume the existing data is stored in a variable named 'resultsy'
+    # If the variable name is different, adjust the following line accordingly
+    existing_data <- result_sy
+
+    # Append the new data
+    combined_data <- bind_rows(existing_data, new_data)
+
+    # Save the combined data back to the file
+    result_sy <- combined_data
+    save(result_sy, file = file)
+  } else {
+    # If the file doesn't exist, save the new data directly
+    result_sy <- new_data
+    save(result_sy, file = file)
+  }
+}
+
+# Example usage
+# Assuming 'resultsy' is your new data frame
+# Replace 'new_data' with your actual data frame
+new_data <- resultsy
+
+# Call the function to append data to the file
+append_to_rda(new_data, "resultsy_rho0_cf.Rda")
 #
 # load("results_cf.Rda")
 # methodnams <- c("1", "2", "3", "4", "5","6")
