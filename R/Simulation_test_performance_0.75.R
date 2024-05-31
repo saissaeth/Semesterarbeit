@@ -73,18 +73,19 @@ run_new <- function(Setup,Varmiss,rhos){
 }
 run_new_y <- function(Setup,Varmiss,rhos){
   dgp <- get(glue("fun{Setup}"))(Varmiss = Varmiss)
-  sim <- simulate.dgp(object = dgp, rho = rhos, nsim = 1600L, d = 20L, nsimtest = 1000L)
+  sim <- simulate.dgp(object = dgp, rho = rhos, nsim = 2600L, d = 20L)
   x_vars <- grep("^X", names(sim), value = TRUE)
-  X <- as.matrix(sim[, x_vars, drop = FALSE])
-  Y <- c(sim$y)
-  W <- as.numeric(c(sim$trt))
+  X <- as.matrix(sim[, x_vars, drop = FALSE] %>% slice(1:1600))
+  Y <- c(sim$y)[1:1600]
+  W <- as.numeric(c(sim$trt))[1:1600]
   rf <- causal_forest(X = as.matrix(X), Y = Y, W = W, num.trees = 1000, seed = 8008)
-  X_test_all <- attr(sim, "testxdf")
-  X_test <- attr(sim, "testxdf") %>% select(all_of(x_vars))
-  y_hat <- predict(rf, X_test)
-  return(MSE = mean((y_hat - Y)^2))
+  test_df <- sim %>% slice(1601:2600)
+  X_test <- as.matrix(test_df[, x_vars, drop = FALSE])
+  Y_test <- test_df$y
+  #X_test <- attr(sim, "testxdf") %>% select(all_of(x_vars))
+  y_hat <- as.numeric(unlist(c(predict(rf, X_test))))
+  return(MSE = mean(y_hat - Y_test)^2)
 }
-
 # results  <-
 
 #   expand_grid(
