@@ -137,18 +137,18 @@ append_to_rda <- function(new_data, file) {
 
     # Assume the existing data is stored in a variable named 'resultsy'
     # If the variable name is different, adjust the following line accordingly
-    existing_data <- result_sy
+    existing_data <- resultsy
 
     # Append the new data
     combined_data <- bind_rows(existing_data, new_data)
 
     # Save the combined data back to the file
-    result_sy <- combined_data
-    save(result_sy, file = file)
+    resultsy <- combined_data
+    save(resultsy, file = file)
   } else {
     # If the file doesn't exist, save the new data directly
-    result_sy <- new_data
-    save(result_sy, file = file)
+    resultsy <- new_data
+    save(resultsy, file = file)
   }
 }
 
