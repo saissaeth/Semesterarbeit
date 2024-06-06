@@ -123,7 +123,7 @@ resultsy <-  expand_grid(
 #hallo
 #save(results,file="results_cf.Rda")
 #save(resultsy,file="resultsy_rho0.5_cf.Rda")
-save(resultsy,file="resultsy_rho0.25A_cf.Rda")
+save(resultsy,file="resultsy_rho0.5A_cf.Rda")
 # library(dplyr)
 #
 # # Define the function to append data to an existing Rda file
