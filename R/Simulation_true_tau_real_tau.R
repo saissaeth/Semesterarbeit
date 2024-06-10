@@ -204,7 +204,7 @@ paper_theme <- function() {
 # load("results_cf.Rda")
 p <- ggplot(results_unnested, aes(x = true_tau, y = tau_hat, fill = dim_vec)) +
   geom_density2d() +
-  scale_fill_viridis_d(name = "Dim Vec") +
+  scale_color_viridis_d(name = "Dim Vec") +
   labs(title = "Heatmap of tau_hat vs. true_tau by dim_vec",
        x = "True Tau",
        y = "Tau Hat") +
