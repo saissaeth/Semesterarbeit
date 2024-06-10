@@ -135,7 +135,8 @@ set.seed(8008)
 load("tau_vs_true_tau.Rda")
 
 results_unnested <- resultsy %>% unnest(diff)
-
+results_unnested_A <- results_unnested %>% filter(Setup == "A")
+results_unnested_B <- results_unnested %>% filter(Setup == "B")
 methodnams <- c("1", "2", "3", "4", "5","6")
 
 levels(results_unnested$dim_vec) <- methodnams
@@ -202,7 +203,7 @@ paper_theme <- function() {
 }
 
 # load("results_cf.Rda")
-p <- ggplot(results_unnested, aes(x = true_tau, y = tau_hat, fill = dim_vec)) +
+p_A <- ggplot(results_unnested_A, aes(x = true_tau, y = tau_hat, fill = dim_vec)) +
   geom_density2d() +
   scale_color_viridis_d(name = "Dim Vec") +
   labs(title = "Heatmap of tau_hat vs. true_tau by dim_vec",
@@ -211,6 +212,19 @@ p <- ggplot(results_unnested, aes(x = true_tau, y = tau_hat, fill = dim_vec)) +
   paper_theme() +
   theme(legend.position = "right")
 
-ggsave("p.pdf")
+ggsave("p_A.pdf")
+
+
+p_B <- ggplot(results_unnested_B, aes(x = true_tau, y = tau_hat, fill = dim_vec)) +
+  geom_density2d() +
+  scale_color_viridis_d(name = "Dim Vec") +
+  labs(title = "Heatmap of tau_hat vs. true_tau by dim_vec",
+       x = "True Tau",
+       y = "Tau Hat") +
+  paper_theme() +
+  theme(legend.position = "right")
+
+ggsave("p_A.pdf")
+
 #print(p)
 
