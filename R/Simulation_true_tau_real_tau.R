@@ -135,8 +135,8 @@ set.seed(8008)
 load("tau_vs_true_tau.Rda")
 
 results_unnested <- resultsy %>% unnest(diff)
-results_unnested_A <- results_unnested %>% filter(Setup == "A")
-results_unnested_B <- results_unnested %>% filter(Setup == "B")
+# results_unnested_A <- results_unnested %>% filter(repl==1)
+# results_unnested_B <- results_unnested %>% filter(Setup == "B")
 methodnams <- c("1", "2", "3", "4", "5","6")
 
 levels(results_unnested$dim_vec) <- methodnams
@@ -202,29 +202,26 @@ paper_theme <- function() {
   )
 }
 
-# load("results_cf.Rda")
-p_A <- ggplot(results_unnested_A, aes(x = true_tau, y = tau_hat, fill = dim_vec)) +
+
+library(ggplot2)
+library(viridis)
+library(dplyr)
+
+# Create a new variable to indicate if dim_vec is 6 or not
+results_unnested <- results_unnested %>%
+  mutate(dim_vec_group = ifelse(dim_vec == 6, "6", "Not 6"))
+
+# Plot using the new variable
+p <- ggplot(results_unnested, aes(x = true_tau, y = tau_hat, color = dim_vec_group)) +
   geom_density2d() +
-  scale_color_viridis_d(name = "Dim Vec") +
-  labs(title = "Heatmap of tau_hat vs. true_tau by dim_vec",
+  scale_color_viridis_d(name = "Dim Vec Group") +
+  labs(title = "Heatmap of tau_hat vs. true_tau by dim_vec group",
        x = "True Tau",
        y = "Tau Hat") +
-  paper_theme() +
+  theme_minimal() +
   theme(legend.position = "right")
 
-ggsave("p_A.pdf")
-
-
-p_B <- ggplot(results_unnested_B, aes(x = true_tau, y = tau_hat, fill = dim_vec)) +
-  geom_density2d() +
-  scale_color_viridis_d(name = "Dim Vec") +
-  labs(title = "Heatmap of tau_hat vs. true_tau by dim_vec",
-       x = "True Tau",
-       y = "Tau Hat") +
-  paper_theme() +
-  theme(legend.position = "right")
-
-ggsave("p_A.pdf")
+ggsave("p.pdf")
 
 #print(p)
 
