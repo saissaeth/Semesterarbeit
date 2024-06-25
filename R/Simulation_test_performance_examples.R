@@ -69,7 +69,7 @@ run_new <- function(Setup,Varmiss,rhos){
   X_test <- attr(sim, "testxdf") %>% select(all_of(x_vars))
   true_tau <- predict(sim,X_test_all)$tfct
   tau.hat  <- predict(rf, X_test)$predictions
-  return(MSE = mean((true_tau - tau.hat)^2),tau.hat = tau.hat,true_tau = true_tau)
+  return(MSE = mean((true_tau - tau.hat)^2))
 }
 run_new_y <- function(Setup,Varmiss,rhos){
   dgp <- get(glue("fun{Setup}"))(Varmiss = Varmiss)
